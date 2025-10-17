@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 import time
 import numpy as np
 import torch
@@ -49,7 +50,7 @@ class TableTopSceneCfg(InteractiveSceneCfg):
     robot: ArticulationCfg = ArticulationCfg(
         prim_path="/World/Robot",
         spawn=sim_utils.UsdFileCfg(
-            usd_path=f"/home/lch/IsaacLab/humanoid_amp/usd/g1_29dof_rev_1_0.usd",
+            usd_path=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "usd/g1_29dof_rev_1_0.usd"),
             activate_contact_sensors=True,
             rigid_props=sim_utils.RigidBodyPropertiesCfg(
                 disable_gravity=False,

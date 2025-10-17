@@ -13,7 +13,11 @@ a more user-friendly way.
 """Launch Isaac Sim Simulator first."""
 
 import argparse
+import os
 import sys
+
+# Add parent directory to Python path for local module import
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from isaaclab.app import AppLauncher
 
@@ -63,7 +67,6 @@ simulation_app = app_launcher.app
 """Rest everything follows."""
 
 import gymnasium as gym
-import os
 import random
 from datetime import datetime
 
@@ -100,7 +103,8 @@ from isaaclab_rl.skrl import SkrlVecEnvWrapper
 import isaaclab_tasks  # noqa: F401
 from isaaclab_tasks.utils.hydra import hydra_task_config
 
-# PLACEHOLDER: Extension template (do not remove this comment)
+# Import local extension to register custom environments
+import humanoid_amp  # noqa: F401
 
 # config shortcuts
 algorithm = args_cli.algorithm.lower()

@@ -3,37 +3,83 @@
 ---
 
 # Humanoid AMP
-[![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/latest/index.html)
-[![IsaacLab](https://img.shields.io/badge/IsaacLab-2.1.0-silver.svg)](https://isaac-sim.github.io/IsaacLab/main/index.html)
+[![IsaacSim](https://img.shields.io/badge/IsaacSim-5.0.0-silver.svg)](https://docs.isaacsim.omniverse.nvidia.com/latest/index.html)
+[![IsaacLab](https://img.shields.io/badge/IsaacLab-2.2.0-silver.svg)](https://isaac-sim.github.io/IsaacLab/main/index.html)
 [![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://docs.python.org/3/whatsnew/3.10.html)
 [![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/20.04/)
 [![License](https://img.shields.io/badge/license-BSD--3-yellow.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
+## Prerequisites
 
-## Symbolic Links
+This project requires Isaac Sim and Isaac Lab installed via pip. If you haven't installed them yet:
+
+```bash
+# Create and activate a virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install PyTorch (CUDA 12.x)
+pip install torch==2.7.0 torchvision==0.22.0 --index-url https://download.pytorch.org/whl/cu128
+
+# Install Isaac Sim
+pip install "isaacsim[all,extscache]==5.0.0" --extra-index-url https://pypi.nvidia.com
+
+# Install Isaac Lab
+pip install "isaaclab[isaacsim,all]==2.2.0" --extra-index-url https://pypi.nvidia.com
+
+# Install additional dependencies
+pip install skrl tensorboard
 ```
-ln -s ~/IsaacLab/source/isaaclab_tasks/isaaclab_tasks/direct/humanoid_amp ~/IsaacLab/
 
-ln -s ~/IsaacLab/scripts/reinforcement_learning/skrl ~/IsaacLab/
-```
+## Setup
 
+No symbolic links or special setup required! This project works as a standalone Isaac Lab extension.
 
 ## Train
+
+```bash
+python train.py --task Isaac-G1-AMP-Walk-Direct-v0 --headless --num_envs 4096
 ```
-./isaaclab.sh -p ~/IsaacLab/skrl/train.py --task Isaac-G1-AMP-Walk-Direct-v0 --headless
+
+or for dance training:
+
+```bash
+python train.py --task Isaac-G1-AMP-Dance-Direct-v0 --headless --num_envs 4096
 ```
-or
+
+Additional training options:
+```bash
+# With video recording
+python train.py --task Isaac-G1-AMP-Walk-Direct-v0 --video --video_interval 10000
+
+# Specify device
+python train.py --task Isaac-G1-AMP-Walk-Direct-v0 --device cuda:0
+
+# Resume from checkpoint
+python train.py --task Isaac-G1-AMP-Walk-Direct-v0 --checkpoint logs/skrl/path/to/checkpoint
 ```
-./isaaclab.sh -p ~/IsaacLab/skrl/train.py --task Isaac-G1-AMP-Dance-Direct-v0 --headless
-```
+
 ## Eval
+
+For evaluation, you'll need to use the play script from Isaac Lab:
+
+```bash
+# Install the project as editable for evaluation
+pip install -e .
+
+# Then use isaaclab_tasks play script
+python -m isaaclab_tasks.direct.humanoid_amp.train --task Isaac-G1-AMP-Walk-Direct-v0 --num_envs 32
 ```
-./isaaclab.sh -p ~/IsaacLab/skrl/play.py --task Isaac-G1-AMP-Walk-Direct-v0 --num_envs 32 
-```
+
+Or use the train.py with a checkpoint for evaluation mode.
+
 ## TensorBoard
+
+```bash
+python -m tensorboard.main --logdir logs/skrl/
 ```
-./isaaclab.sh -p -m tensorboard.main --logdir logs/skrl/
-```
+
+Then open your browser to http://localhost:6006
 
 Walk training: `master` branch. Dance training: **`dance`** branch.
 
